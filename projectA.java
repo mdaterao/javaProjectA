@@ -156,7 +156,6 @@ public static double [] trainingPerceptron(double [][] X, int [] Y) {
    int N = 1048;
    double [] W = new double [M];
    int prediction = 0;
-   double [] wIntermediate = new double [M];
    
    //Initialize W to 0
    for (int i = 0; i < M; i++) {
@@ -166,12 +165,7 @@ public static double [] trainingPerceptron(double [][] X, int [] Y) {
    // Compute the classification (1 or -1) based on sign of W dot Xi
    for (int i = 0; i < N; i++) {
       
-      try {
-            writeWeights(W);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-      
+            
       // Compute dot product of W and Xi
       double dotProduct = computeDotProd(W, X[i]);
       
@@ -186,10 +180,15 @@ public static double [] trainingPerceptron(double [][] X, int [] Y) {
       //Set W to W + Yi * Xi if predicted classification doesn't match expected Yi value
       if (prediction != Y[i]) {
          for (int j = 0; j < M; j++) {
-            wIntermediate[j] = Y[i] * X[i][j];
-            W[j] = W[j] + wIntermediate[j];
+            W[j] = W[j] + Y[i] * X[i][j];;
          }
-      } 
+      }
+      try {
+            writeWeights(W);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+ 
    }
    
    return W;
@@ -238,10 +237,10 @@ public static int[] validatePerceptron(double [][] P, double [] W, int [] valida
    
    //Determining number of correct predictions
    if (classification != validateY[i]) {
-      correctPredictions += 1;
+      incorrectPredictions += 1;
    }
    else {
-      incorrectPredictions += 1;
+      correctPredictions += 1;
    }
    
    
